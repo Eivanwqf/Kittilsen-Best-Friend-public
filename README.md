@@ -113,15 +113,19 @@ npx tsx scripts/e2e-check.ts   # 框架级回归（真实 LLM，2-5 分钟）
 
 
 <img width="1996" height="1863" alt="Lib" src="https://github.com/user-attachments/assets/6662ee42-fc99-4727-99f8-b200f7122d10" />
+
 **图书馆记忆界面**
 
 <img width="2282" height="1889" alt="Chronological" src="https://github.com/user-attachments/assets/0771c98c-67a9-4b42-acf7-2a7dc10abb6c" />
+
 **按照发生的时间顺序进行排序**
 
 <img width="1937" height="1802" alt="RelativeMemory" src="https://github.com/user-attachments/assets/e8703a1c-34e9-49c5-b722-70764692551e" />
+
 **用向量KNN, 进行所有相似笔记的召回，进而对相关事件的画布进行扩充。**
 
 <img width="2322" height="1842" alt="Chat" src="https://github.com/user-attachments/assets/147e6d78-e880-47ca-85ee-743b51f8b3b7" />
+
 **最重要的，聊天界面。**
 
 
