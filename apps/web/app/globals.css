@@ -1,0 +1,450 @@
+/* ─────────────────────────────────────────────
+   旧档案馆 · 藏书室 设计系统（2026-08-23 前端重构）
+   羊皮纸 / 墨 / 藏书票红 / 铜锈绿
+   ───────────────────────────────────────────── */
+:root {
+  /* 纸 */
+  --paper: #f4efe3;
+  --paper-2: #ece4d2;
+  --card: #fdfbf4;
+  --card-tint: #f8f3e7;
+
+  /* 墨 */
+  --ink: #2b2620;
+  --ink-2: #655d4f;
+  --ink-3: #9a9181;
+  --ink-4: #c2b9a6;
+
+  /* 线 */
+  --line: #ddd3be;
+  --line-strong: #c6baa0;
+
+  /* 印（accent） */
+  --seal: #b3462e;
+  --seal-dark: #8e3520;
+  --seal-soft: #f0ded5;
+
+  /* 锈（归档/成功） */
+  --rust: #5d6b4d;
+  --rust-soft: #e3e7dc;
+
+  /* 金（时间/数字） */
+  --gold: #a8863c;
+  --gold-soft: #efe6cf;
+
+  /* 字 */
+  --font-serif: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  /* 阴影 */
+  --shadow-card: 0 1px 2px rgba(43, 38, 32, 0.05), 0 4px 14px rgba(43, 38, 32, 0.06);
+  --shadow-lift: 0 2px 4px rgba(43, 38, 32, 0.07), 0 10px 26px rgba(43, 38, 32, 0.11);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--paper);
+  color: var(--ink);
+  /* 纸张噪点：细颗粒感，克制的档案氛围 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+  line-height: 1.7;
+}
+
+a { color: inherit; }
+
+::selection { background: var(--seal); color: var(--card); }
+
+/* ── 版心 ── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 22px 90px;
+}
+.page-narrow { max-width: 760px; }
+
+/* ── 页面标题区 ── */
+.page-head { margin: 6px 0 30px; }
+.page-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.06em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-sub { color: var(--ink-3); margin: 8px 0 0; font-size: 13px; letter-spacing: 0.04em; }
+
+/* 红章（KBF 藏书印） */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--seal);
+  color: var(--card);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  box-shadow: inset 0 0 0 1.5px rgba(253, 251, 244, 0.55);
+  transform: rotate(-3deg);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* 档案编号 */
+.serial {
+  font-family: var(--font-serif);
+  color: var(--ink-3);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+/* ── 分类印章（小） ── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 10px;
+  border-radius: 3px;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: #fdfbf4;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+.tag.ghost {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: var(--ink-3);
+}
+
+/* ── 档案卡 ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+.card-hover { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--line-strong);
+}
+
+/* ── 按钮 ── */
+.btn {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  padding: 7px 18px;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.03em;
+}
+.btn:hover:not(:disabled) { border-color: var(--seal); color: var(--seal); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn-primary {
+  background: var(--seal);
+  border-color: var(--seal);
+  color: var(--card);
+}
+.btn-primary:hover:not(:disabled) { background: var(--seal-dark); border-color: var(--seal-dark); color: var(--card); }
+
+/* ── 输入 ── */
+.input, .select, .textarea {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--ink);
+  padding: 8px 11px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--seal);
+  box-shadow: 0 0 0 2px rgba(179, 70, 46, 0.14);
+}
+.textarea { resize: vertical; font-family: var(--font-sans); }
+
+/* ── 徽标（类型/演化） ── */
+.badge {
+  display: inline-block;
+  padding: 1.5px 9px;
+  border-radius: 3px;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+}
+
+/* ── 动效：staggered reveal ── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise { animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.fade-in { animation: fadeIn 0.5s ease both; }
+
+/* 气泡入场：微升（比纯 fade 更有"回话"感） */
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 时间线节点：加载时印章"盖下"一次 */
+@keyframes stamp {
+  0% { transform: scale(0.4); opacity: 0; }
+  55% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 按钮按压反馈 */
+.btn { transition: all 0.15s ease, transform 0.08s ease; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+
+/* 卡片 hover：标题与档案编号向印章红过渡（"点亮"细节） */
+.card-hover h3 { transition: color 0.18s ease; }
+.card-hover .serial { transition: color 0.18s ease; }
+.card-hover:hover h3 { color: var(--seal); }
+.card-hover:hover .serial { color: var(--seal); }
+
+/* 墨色顶栏（layout） */
+.topbar {
+  background: var(--ink);
+  color: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  border-bottom: 2px solid var(--seal);
+  box-shadow: 0 3px 14px rgba(43, 38, 32, 0.16);
+}
+.topbar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 22px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.topbar-brand {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.topbar-brand .brand-seal {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  background: var(--seal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  box-shadow: inset 0 0 0 1px rgba(253, 251, 244, 0.5);
+}
+.topbar-nav { display: flex; gap: 22px; }
+.topbar-link {
+  color: var(--ink-4);
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+.topbar-link:hover { color: var(--paper); }
+.topbar-link.active { color: var(--paper); }
+.topbar-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: var(--seal);
+}
+
+/* 档案时间线（timeline） */
+.axis { position: relative; padding-left: 30px; }
+.axis-line {
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--line-strong), var(--ink-4));
+}
+.axis-node {
+  position: absolute;
+  left: -23px;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2.5px solid var(--seal);
+  box-shadow: 0 0 0 3px var(--paper);
+  animation: stamp 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+.axis-month {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0 0 12px;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/* 对话（chat） */
+.chat-bubble {
+  max-width: 82%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  animation: bubbleIn 0.32s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.chat-bubble.user {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-right-radius: 3px;
+}
+.chat-bubble.assistant {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 3px;
+  box-shadow: var(--shadow-card);
+}
+
+/* 对话输入条 */
+.chat-input {
+  flex: 1;
+  padding: 11px 15px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  background: var(--card);
+  font-size: 14.5px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.chat-input:focus { border-color: var(--seal); box-shadow: 0 0 0 2px rgba(179, 70, 46, 0.14); }
+
+/* 侧栏（会话/分类） */
+.side-panel {
+  background: var(--card-tint);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.side-item {
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+/* hover：左侧滑入 3px 墨色短条（档案书签感） */
+.side-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--ink-3);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.18s ease;
+}
+.side-item:hover { background: var(--paper-2); }
+.side-item:hover::before { transform: scaleY(1); }
+/* 选中：藏书票红（印章感）+ 米白字，比墨黑更清晰且贴主题 */
+.side-item.active {
+  background: var(--seal);
+  color: var(--card);
+  box-shadow: 0 1px 3px rgba(43, 38, 32, 0.18);
+}
+.side-item.active::before { display: none; }
+/* 选中态内 .serial（如"全部"）改米白——serial 自带灰色会覆盖继承色 */
+.side-item.active .serial { color: var(--card); }
+
+/* 弹窗 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 38, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  animation: fadeIn 0.2s ease both;
+}
+.modal-card {
+  background: var(--card);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 26px 28px;
+  width: 520px;
+  max-width: 92vw;
+  box-shadow: 0 24px 60px rgba(43, 38, 32, 0.28);
+  animation: rise 0.28s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.modal-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 4px;
+  letter-spacing: 0.05em;
+}
+.modal-sub { margin: 0 0 18px; color: var(--ink-3); font-size: 12.5px; }
+
+/* 打字机光标（装饰） */
+@keyframes blink { 50% { opacity: 0; } }
+.caret { animation: blink 1.1s step-end infinite; }
+
+@media (max-width: 720px) {
+  .topbar-inner { gap: 14px; padding: 0 14px; }
+  .topbar-nav { gap: 12px; }
+  .page { padding: 24px 14px 70px; }
+}

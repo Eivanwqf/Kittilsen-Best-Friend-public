@@ -1,0 +1,16 @@
+node_modules/
+data/*.db
+data/*.db-*
+.env
+.env.local
+dist/
+.next/
+*.tsbuildinfo
+.python/
+__pycache__/
+
+# 数据目录整体排除（数据库 + 转换产物，可重建）
+data/
+# 环境变量全部变体（防备份/副本/Zone 标记文件泄露 key）
+.env*
+*Zone.Identifier

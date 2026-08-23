@@ -1,0 +1,21 @@
+{
+  "name": "kittilsen-best-friend",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @kbf/server",
+    "dev:web": "npm run dev --workspace @kbf/web",
+    "build": "npm run build --workspaces --if-present",
+    "embed-check": "tsx scripts/embed-check.ts",
+    "dev:all": "concurrently -n server,web -c blue,magenta \"npm run dev\" \"npm run dev:web\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
